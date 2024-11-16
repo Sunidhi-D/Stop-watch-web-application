@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch with Last Stopped Time</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f3f3f3;
+      flex-direction: column;
+    }
+    .stopwatch {
+      text-align: center;
+      background-color: #333;
+      color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      margin-bottom: 2px;
+    }
+    #time, #lastStopped {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    .buttons button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .try {
+        text-align: center;
+      background-color: #333;
+      color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      margin-bottom: 2px;
+    }
+    .start { background-color: #4CAF50; color: white; }
+    .stop { background-color: #f44336; color: white; }
+    .reset { background-color: #ff9800; color: white; }
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stopwatch">
+  <div id="time">00:00:00:000</div>
+  <div class="buttons">
+    <button class="start" onclick="startTimer()">Start</button>
+    <button class="stop" onclick="stopTimer()">Stop</button>
+    <button class="reset" onclick="resetTimer()">Reset</button>
+  </div>
+</div>
+
+<div class="stopwatch">
+<div id="lastStopped">Last Stopped: --:--:--.---</div>
+</div>
+
+<script>
+  let hours = 0, minutes = 0, seconds = 0, milliseconds = 0;
+  let timerInterval;
+  let isRunning = false;
+  let lastStoppedTime = "--:--:--.---"; // Default display for last stopped time
+
+  function startTimer() {
+    if (!isRunning) {
+      isRunning = true;
+      timerInterval = setInterval(updateTime, 10); // Update every 10 milliseconds
+    }
+  }
+
+  function stopTimer() {
+    if (isRunning) {
+      isRunning = false;
+      clearInterval(timerInterval);
+      lastStoppedTime = formatTime(); // Save the current time as last stopped time
+      document.getElementById("lastStopped").textContent = "Last Stopped: " + lastStoppedTime;
+    }
+  }
+
+  function resetTimer() {
+    stopTimer();
+    hours = 0;
+    minutes = 0;
+    seconds = 0;
+    milliseconds = 0;
+    updateDisplay();
+  }
+
+  function updateTime() {
+    milliseconds += 10;
+    if (milliseconds >= 1000) {
+      milliseconds = 0;
+      seconds++;
+      if (seconds === 60) {
+        seconds = 0;
+        minutes++;
+        if (minutes === 60) {
+          minutes = 0;
+          hours++;
+        }
+      }
+    }
+    updateDisplay();
+  }
+
+  function updateDisplay() {
+    document.getElementById("time").textContent = formatTime();
+  }
+
+  function formatTime() {
+    return (
+      (hours < 10 ? "0" + hours : hours) + ":" +
+      (minutes < 10 ? "0" + minutes : minutes) + ":" +
+      (seconds < 10 ? "0" + seconds : seconds) + ":" +
+      (milliseconds < 100 ? (milliseconds < 10 ? "00" + milliseconds : "0" + milliseconds) : milliseconds)
+    );
+  }
+</script>
+
+</body>
+</html>
